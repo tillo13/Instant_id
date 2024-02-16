@@ -14,7 +14,7 @@ Users can define and experiment with ranges of values for various parameters to 
 - **Number of Inference Steps Range**
 - **Guidance Scale Range**
 
-This structured variety helps find the sweet spot for each image, allowing for extensive customization:
+This structured variety helps find the sweet spot for each image, allowing for you to find the right customization:
 
 ```python
 IDENTITYNET_STRENGTH_RATIO_RANGE = (1.0, 1.5)
