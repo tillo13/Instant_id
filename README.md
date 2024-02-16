@@ -1,70 +1,57 @@
-# Batch Image Processing for InstantID Generation
+# Enhanced Batch Processing for InstantID with Comprehensive Logging
 
-## Overview
-The `preprocess.py` module significantly enhances the usability of the `app.py` InstantID generation tool by enabling batch processing of images. With this module, users can now apply various styles and settings to multiple images, streamlining the process of creating stylized, identity-preserving versions of a provided dataset.
+## Introduction
+The original InstantID tool is currently limited to processing a single image per execution. The `preprocess.py` module overcomes this limitation, enabling batch image processing. This enhancement allows for the continuous generation of stylized images by hijacking the initial loader function to preprocess and manage multiple images in sequence.
 
-## Features
-- **Batch Processing:** Process numerous images in one go without the need for repeated manual interventions.
-- **Diverse Stylization:** Automatically applies a range of styles to each image, with options for randomness or preset selections.
-- **Adjustable Settings:** Each image can be augmented with a different set of parameters, including strength ratios, number of inference steps, and guidance scales.
-- **Resize and Padding:** Images are automatically resized and padded to maintain consistent dimensions across the batch.
-- **Loop Through Styles:** Optionally configure the script to loop through available styles, ensuring a variety of outputs.
-- **Efficient Logging:** Progress and results are logged to a CSV file for easy tracking and auditing.
+## Batch Processing Unlocked
+The heart of this upgrade lies in the ability to loop through an entire folder of images (`sample_images`), applying a diverse set of styles and parameters to each image. With this ability, users can maximize the utility of InstantID by processing large datasets without manual intervention.
 
-## Quick Start
+## Configurable Ranges and Styles
+Users can define and experiment with ranges of values for various parameters to discover the optimal settings:
 
-1. Place your images in the `sample_images` folder.
-2. Configure your desired settings within `preprocess.py`.
-3. Run `preprocess.py` to process all images in the folder using the InstantID model.
-4. Processed images and logs will be saved to `generated_images` and `generation_log.csv` respectively.
+- **IdentityNet Strength Ratio Range**
+- **Adapter Strength Ratio Range**
+- **Number of Inference Steps Range**
+- **Guidance Scale Range**
 
-## Configuration Variables
-
-Here's a quick rundown of key configuration variables:
+This structured variety helps find the sweet spot for each image, allowing for extensive customization:
 
 ```python
-INPUT_FOLDER_NAME = 'sample_images'
-OUTPUT_FOLDER_NAME = 'generated_images'
-LOG_FILENAME = 'generation_log.csv'
-STYLES = [style["name"] for style in style_list]
-USE_RANDOM_STYLE = False
-NUMBER_OF_LOOPS = 1
+IDENTITYNET_STRENGTH_RATIO_RANGE = (1.0, 1.5)
+ADAPTER_STRENGTH_RATIO_RANGE = (0.7, 1.0)
+NUM_INFERENCE_STEPS_RANGE = (40, 60)
+GUIDANCE_SCALE_RANGE = (7.0, 12.0)
 ...
 ```
 
-Adjust these settings based on your requirements before executing the script.
+Additionally, the script can loop through predefined or random styles, applying each to the set of images to generate a rich array of results.
 
-## How It Works
+## Automated Image Preparation
+Efficient image preparation is vital for achieving consistent results. The `preprocess.py` module employs `resize_and_pad_image` to standardize all images to the same dimensions, ensuring uniformity across the batch, ready for further processing by InstantID.
 
-`preprocess.py` imports `generate_image` from `app.py` and uses it as the core function to apply InstantID's identity-preserving features to each image in the specified input folder. It handles the batching, resizing, padding, and logging that `app.py` could not originally perform on its own.
+## Randomized Image Selection
+The module randomly selects images from the `sample_images` directory, ensuring an unbiased and varied selection for processing. This feature is particularly useful when dealing with large collections of images.
 
-### Key Functions
-- `resize_and_pad_image`: Standardizes all images to uniform dimensions.
-- `log_to_csv`: Records the processing results for each image.
-- `initial_image`: Orchestrates the image preprocessing and logging workflow.
+## Detailed CSV Logging
+Each processed image's configuration and outcomes are meticulously logged in a CSV file (default `generation_log.csv`). This log includes key details like identity and adapter strength ratios, the number of inference steps, guidance scale, and any error messages.
 
-### Execution
+## Real-Time Feedback
+As the batch processing unfolds, `preprocess.py` provides real-time feedback in the console, displaying time remaining, progress of values, and overall statistics. This immediate insight into the batch progress is crucial for efficient workflow management.
 
-To start processing, just invoke the `initial_image` function:
+## Gradio Integration
+After batch processing, users can opt to open up Gradio for fine-tuned, one-off image processing. This flexibility marries the robustness of batch processing with the refinement of individual image customization.
 
 ```python
 from preprocess import initial_image, generate_image
 initial_image(generate_image)
 ```
 
-## Footnotes
-
-### Origin
-This module is an addition to the initially single image-based `app.py` script for InstantID: a cutting-edge, zero-shot identity-preserving generation tool developed by the InstantX Team at Xiaohongshu Inc. The tool supports various generative tasks and can customize personal face images with styles and prompts.
-
-### How `app.py` Works
-`app.py` allows users to upload a face image, optionally add a pose image, enter a text prompt, apply styles, and generate an identity-preserved output image using the InstantID pipeline. However, the original script lacked batch processing capabilities, which is where `preprocess.py` comes into play.
-
-For more details on `app.py` and InstantID, refer to the official project page and associated research paper:
-
-- Project Page: https://github.com/InstantX/InstantID
-- Paper: Wang et al., 2024, "InstantID: Zero-shot Identity-Preserving Generation in Seconds".
+## Conclusion
+`preprocess.py` transforms the InstantID tool into a powerhouse of batch image processing. By extending the original script to handle multiple images, providing detailed logs, and integrating with Gradio for one-off customizations, this module unlocks the full potential of the InstantID pipeline for users and researchers alike.
 
 ---
 
-*InstantID © 2024 by InstantX Team is licensed under Apache License. The research paper was authored by Qixun Wang, Xu Bai, Haofan Wang, Zekui Qin, Anthony Chen, Huaxia Li, Xu Tang, and Yao Hu.*
+For more details on InstantID, refer to the official project page and associated research paper:
+
+- Project Page: https://github.com/InstantX/InstantID
+- Paper: Wang et al., 2024, "InstantID: Zero-shot Identity-Preserving Generation in Seconds".
